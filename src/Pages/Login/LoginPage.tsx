@@ -32,8 +32,6 @@ class LoginPage extends React.Component<any, LoginState> {
         else{
             this.setState({ password: value });
         }
-
-        
     }
 
     handleChecked = (e:any) => {

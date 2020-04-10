@@ -1,11 +1,13 @@
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import Axios from 'axios';
+import {userModel} from '../models/userModel';
 
 
 export const userService = {
     login,    
-    getAll
-   
+    get,
+    update,
+    create
 };
 
 function login(email:string, password:string, rememberMe:boolean) {
@@ -22,7 +24,6 @@ function login(email:string, password:string, rememberMe:boolean) {
         data: credentials
     };
 
-
     return Axios(requestOptions)
         .then(handleResponse)
         .then((data) => {
@@ -35,9 +36,7 @@ function login(email:string, password:string, rememberMe:boolean) {
         });
 }
 
-function getAll() {
-    const token = localStorage.getItem('token');
-    console.log('token'+ token);
+function get() {
     const requestOptions: AxiosRequestConfig = {
         url: 'http://localhost:8080/user',
         method: 'GET'
@@ -48,10 +47,36 @@ function getAll() {
     .then(handleResponse)
     .then((data) => {
         console.log(data);
-        // user details and jwt token stored in local storage
-        //localStorage.setItem('ew-user', JSON.stringify(data.user));
-        //localStorage.setItem('ew-token-auth', JSON.stringify(data.token));
+        return data;
+    });
+}
 
+function update(user: userModel) {
+    const requestOptions: AxiosRequestConfig = {
+        url: `http://localhost:8080/user/${user.id}`,
+        method: 'PUT',
+        data: user 
+    };
+
+    return Axios(requestOptions)
+    .then(handleResponse)
+    .then((data) => {
+        console.log(data);
+        return data;
+    });
+}
+
+function create(user: userModel) {
+    const requestOptions: AxiosRequestConfig = {
+        url: 'http://localhost:8080/user',
+        method: 'POST',
+        data: user 
+    };
+
+    return Axios(requestOptions)
+    .then(handleResponse)
+    .then((data) => {
+        console.log(data);
         return data;
     });
 }
