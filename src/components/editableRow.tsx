@@ -33,7 +33,7 @@ class EditableRow extends Component<any, {user: userModel, submitted: boolean}> 
     }
 
     render() {
-        const { email, role} = this.state.user;
+        const { email} = this.state.user;
         const submitted = this.state.submitted;
         return (
             <tr>
@@ -65,21 +65,17 @@ class EditableRow extends Component<any, {user: userModel, submitted: boolean}> 
 
     emailChange = (e: { target: { name: any; value: any; }; }) => {
         const {value } = e.target;
-            this.state.user.email = value;
-            this.setState({ user: this.state.user });
+        let user = this.state.user;
+        user.email = value;
+        this.setState({ user: user });
     }
 
     onRoleChange = (e: any) => {
-            this.state.user.role = e.label;
-            this.setState({ user: this.state.user });
+        let user = this.state.user;
+        user.role = e.label;
+        this.setState({ user: user });
     }
-
-    roleChange = (e: { target: { name: any; value: any; }; }) => {
-        const {value } = e.target;
-            this.state.user.role = value;
-            this.setState({ user: this.state.user });
-    }
-
+  
     toggleEditMode = () =>{ 
         this.props.onToggleEditMode();
     }

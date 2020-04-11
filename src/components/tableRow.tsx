@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {userModel} from '../models/userModel';
 import EditableRow from './editableRow';
 import { getLoggedInUser } from '../helpers/localStorageService';
+import {userService} from '../Services/user.service';
 
 interface TableRowProps  {
     user:userModel, 
@@ -39,7 +40,6 @@ class TableRow extends Component<TableRowProps, TableRowState> {
             return null;
 
         const { email, role} = this.state.user;
-        const submitted = this.state.submitted;
         return (
             this.state.editMode
             ?<EditableRow user={this.state.user} onToggleEditMode={this.toggleEditMode} onSaveUser={this.saveUser}/>
@@ -54,7 +54,7 @@ class TableRow extends Component<TableRowProps, TableRowState> {
                 
                 {this.canDelete &&
                 <td>
-                    <button onClick={this.toggleEditMode}>Delete</button>
+                    <button onClick={this.deleteUser}>Delete</button>
                 </td>
                 }
                 
@@ -66,6 +66,12 @@ class TableRow extends Component<TableRowProps, TableRowState> {
 
     toggleEditMode = ()=>{
         this.setState({editMode: !this.state.editMode});
+    }
+
+    deleteUser = ()=>{
+        userService.deleteUser(this.state.user).then(()=>{
+            window.location.reload();
+        });
     }
 
     saveUser = (user:userModel)=> {

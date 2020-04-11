@@ -1,14 +1,11 @@
 import React from 'react';
-//import { connect } from 'react-redux';
-//import { userActions } from '../../store/actions';
 import {userService} from '../../Services/user.service';
-//import './LoginPage.css';
+
 interface LoginState{
     email: string,
-    name: string,
     password: string,
-    rememberMe: boolean,
-    submitted: boolean
+    submitted: boolean,
+    loggingIn: boolean
 };
 
 class LoginPage extends React.Component<any, LoginState> {
@@ -17,10 +14,9 @@ class LoginPage extends React.Component<any, LoginState> {
 
         this.state = {
             email: '',
-            name: '',
             password: '',
-            rememberMe: false,
-            submitted: false
+            submitted: false,
+            loggingIn: false
         };
     }
 
@@ -34,25 +30,25 @@ class LoginPage extends React.Component<any, LoginState> {
         }
     }
 
-    handleChecked = (e:any) => {
-        this.setState({ rememberMe: !this.state.rememberMe });
-    }
-
     handleSubmit = (e:any) => {
         e.preventDefault();
 
         this.setState({ submitted: true });
-        const { email, password, rememberMe } = this.state;
-        const { dispatch } = this.props;
+        const { email, password} = this.state;
         if (email && password) {
-            const data = userService.login(email,password, true);
-            //this.props.loginCallback(true);
+            this.setState({loggingIn: true});
+            userService.login(email,password)
+            .then(()=>{
+                window.location.reload();
+            })
+            .finally(()=>{
+                this.setState({loggingIn: false})
+            });
         }
     }
 
     render() {
-        const { loggingIn } = this.props;
-        const { email, password, rememberMe, submitted } = this.state;
+        const { email, password, submitted, loggingIn } = this.state;
         return (
             <div className="container">
                 <div className="row justify-content-center align-items-center vh-100">
@@ -74,10 +70,7 @@ class LoginPage extends React.Component<any, LoginState> {
                                     <div className="help-block">Password is required</div>
                                 }
                             </div>
-                            <div className={'form-group remember-me ' + (submitted && !rememberMe ? ' has-error' : '')}>
-                                <input type="checkbox" className="form-check-input" name="rememberMe" onChange={this.handleChecked} />
-                                <label className="form-check-label" htmlFor="rememberMe"> Remember me</label>
-                            </div>
+                           
                             <div className="form-group">
                                 <button className="btn btn-primary">Login</button>
                                 {
@@ -88,19 +81,8 @@ class LoginPage extends React.Component<any, LoginState> {
                         </form>
                     </div>
                 </div></div>
-         
-      
         );
     }
 }
 
-function mapStateToProps(state: { authentication: { loggingIn: any; loggedIn: any; }; }) {
-    const { loggingIn, loggedIn } = state.authentication;
-    return {
-        loggingIn,
-        loggedIn
-    };
-}
-
-//const connectedLoginPage = connect(mapStateToProps)(LoginPage);
 export { LoginPage }; 

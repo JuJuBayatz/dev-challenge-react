@@ -10,21 +10,21 @@ class UserTable extends Component<any, {users?:any}> {
 
     render() {
 
-        return <table>
-                    <thead>
-                        <th>Email</th>
-                        <th>Role</th>
-                    </thead>
-                    <tbody>
-                    {
-                        this.state.users.map((user:any, i:number) => {
-                            return (<TableRow user={user} role={'admin'} ></TableRow>);
-                        })
-                    }               
-                    </tbody>
-                </table>
-       
-
+        return <div className="row justify-content-center align-items-center vh-100">
+             <table>
+                <thead>
+                    <th>Email</th>
+                    <th>Role</th>
+                </thead>
+                <tbody>
+                {
+                    this.state.users.map((user:any, i:number) => {
+                        return (<TableRow user={user} role={'admin'} ></TableRow>);
+                    })
+                }               
+                </tbody>
+            </table>
+        </div>
     }
 }
 

@@ -11,17 +11,17 @@ export const userService = {
     deleteUser,
     create
 };
+const apiUrl = 'http://localhost:8080/';
 
-function login(email:string, password:string, rememberMe:boolean) {
+function login(email:string, password:string) {
 
     const credentials = {
         email: email,
-        password: password,
-        //RememberMe: rememberMe
+        password: password
     };
 
     const requestOptions: AxiosRequestConfig = {
-        url: 'http://localhost:8080/login/',
+        url: apiUrl +'login/',
         method: 'POST',
         data: credentials
     };
@@ -44,7 +44,8 @@ function logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');   
 }
-function get() {
+
+function get():any {
     const requestOptions: AxiosRequestConfig = {
         url: 'http://localhost:8080/user',
         method: 'GET'
@@ -102,9 +103,9 @@ function create(user: userModel) {
         return data;
     });
 }
+
 function handleResponse(response:AxiosResponse<any>) {
     if (response && response.status === 401) {
-        //logout();
         window.location.reload(true);
     }
 
