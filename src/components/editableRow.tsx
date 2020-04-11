@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import {userModel} from '../models/userModel';
 import {userService} from '../Services/user.service';
-
+import Select from 'react-select'
+import { getLoggedInUser } from '../helpers/localStorageService';
 class EditableRow extends Component<any, {user: userModel, submitted: boolean}> {
+
+    options: { label: string }[];
 
     constructor(props: {user: userModel, toggleEditMode: any}) {
         super(props);
@@ -17,7 +20,18 @@ class EditableRow extends Component<any, {user: userModel, submitted: boolean}> 
 
         this.toggleEditMode = this.toggleEditMode.bind(this);
         this.saveUser = this.saveUser.bind(this);
+        this.onRoleChange = this.onRoleChange.bind(this);
+        const loggedInUser = getLoggedInUser();
+        this.options = [
+            { label: 'user' },
+            { label: 'manager' }
+          ];
+
+        if(loggedInUser?.role === 'admin'){
+            this.options.push({ label: 'admin' });
+        }
     }
+
     render() {
         const { email, role} = this.state.user;
         const submitted = this.state.submitted;
@@ -36,7 +50,9 @@ class EditableRow extends Component<any, {user: userModel, submitted: boolean}> 
                         }
 
             </td>
-            <td>{this.props.user.role}</td>
+            <td>
+                <Select options={this.options} onChange={this.onRoleChange}/>
+            </td>
             <td>
                 <button onClick={this.toggleEditMode}>Cancel</button>
             </td>
@@ -53,6 +69,11 @@ class EditableRow extends Component<any, {user: userModel, submitted: boolean}> 
             this.setState({ user: this.state.user });
     }
 
+    onRoleChange = (e: any) => {
+            this.state.user.role = e.label;
+            this.setState({ user: this.state.user });
+    }
+
     roleChange = (e: { target: { name: any; value: any; }; }) => {
         const {value } = e.target;
             this.state.user.role = value;
@@ -64,6 +85,7 @@ class EditableRow extends Component<any, {user: userModel, submitted: boolean}> 
     }
 
     saveUser = () =>{
+
         console.log(this.state.user);
         if(this.state.user.id){
             userService.update(this.state.user)

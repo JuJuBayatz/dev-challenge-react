@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {userModel} from '../models/userModel';
 import EditableRow from './editableRow';
+import { getLoggedInUser } from '../helpers/localStorageService';
 
 interface TableRowProps  {
     user:userModel, 
@@ -15,6 +16,8 @@ interface TableRowState  {
 
 class TableRow extends Component<TableRowProps, TableRowState> {
 
+    canDelete: boolean;
+    canEdit: boolean;
     constructor(props:TableRowProps) {
         super(props);
         this.state = {
@@ -25,6 +28,10 @@ class TableRow extends Component<TableRowProps, TableRowState> {
 
         this.toggleEditMode = this.toggleEditMode.bind(this);
         this.saveUser = this.saveUser.bind(this);
+
+        const loggedInUserRole = getLoggedInUser()?.role;
+        this.canEdit = loggedInUserRole === 'admin' || loggedInUserRole === 'manager';
+        this.canDelete = loggedInUserRole === 'admin';
     }  
 
     render() {
@@ -39,9 +46,18 @@ class TableRow extends Component<TableRowProps, TableRowState> {
             :<tr>
                 <td>{email}</td>
                 <td>{role}</td>
+                {this.canEdit &&
                 <td>
-                    <button onClick={this.toggleEditMode}>EditMode</button>
+                    <button onClick={this.toggleEditMode}>Edit</button>
                 </td>
+                }
+                
+                {this.canDelete &&
+                <td>
+                    <button onClick={this.toggleEditMode}>Delete</button>
+                </td>
+                }
+                
             </tr>
             
             

@@ -4,9 +4,11 @@ import {userModel} from '../models/userModel';
 
 
 export const userService = {
-    login,    
+    login, 
+    logout,  
     get,
     update,
+    deleteUser,
     create
 };
 
@@ -31,11 +33,17 @@ function login(email:string, password:string, rememberMe:boolean) {
             console.log(data);
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('token', data.token);
+            window.location.reload();
             return data;
 
         });
 }
 
+function logout() {
+
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');   
+}
 function get() {
     const requestOptions: AxiosRequestConfig = {
         url: 'http://localhost:8080/user',
@@ -56,6 +64,20 @@ function update(user: userModel) {
         url: `http://localhost:8080/user/${user.id}`,
         method: 'PUT',
         data: user 
+    };
+
+    return Axios(requestOptions)
+    .then(handleResponse)
+    .then((data) => {
+        console.log(data);
+        return data;
+    });
+}
+
+function deleteUser(user: userModel) {
+    const requestOptions: AxiosRequestConfig = {
+        url: `http://localhost:8080/user/${user.id}`,
+        method: 'DELETE'
     };
 
     return Axios(requestOptions)

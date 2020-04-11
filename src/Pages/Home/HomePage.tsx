@@ -7,6 +7,12 @@ interface HomepageState{users: userModel[]}
 
 class HomePage extends Component<any, HomepageState> {
 
+    constructor(props: any) {
+        super(props);
+        this.logout = this.logout.bind(this);
+        this.addNewUser = this.addNewUser.bind(this);
+    }
+
     componentDidMount() {
         userService.get()
         .then((users: userModel[])=>{
@@ -18,10 +24,16 @@ class HomePage extends Component<any, HomepageState> {
     render() {
         const loggedInUserRole = getLoggedInUser()?.role;
         return (
-            <div>
-                <header>Home</header>
+            <div className="container">
+            <div className="row justify-content-center align-items-center vh-100">
+                <div className="col-6">
+                    <h2>Users</h2>
+       
+                <button onClick={this.logout}>Logout</button>   
                 {this.getUserTable(loggedInUserRole)}  
                 <button onClick={this.addNewUser}>Add new user</button>   
+            </div>
+            </div>
             </div>
         );
     }
@@ -31,15 +43,24 @@ class HomePage extends Component<any, HomepageState> {
             return <UserTable users={this.state?.users}/>
         }
     }
+
     addNewUser(){
 
         if(this.state?.users){
+            this.state.users.push({
+                id:'',
+                email:'',
+                role:''
+            });
             this.setState({
-                //users.add()
+                users: this.state.users
             })
         }
+    }
 
-
+    logout(){
+        userService.logout();
+        window.location.reload();
     }
 }
 
