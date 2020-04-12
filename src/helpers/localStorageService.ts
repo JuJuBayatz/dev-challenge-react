@@ -20,6 +20,11 @@ export function setToken(data: loginModel) {
     return null;
   }
 
+  export function getLoginType() :boolean {
+    const aad = localStorage.getItem('aad');
+    return aad? aad==='true':false;
+  }
+  
   export function getRefreshToken() {
     return localStorage.getItem('token');
   }

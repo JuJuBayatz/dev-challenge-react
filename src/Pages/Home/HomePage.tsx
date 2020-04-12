@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {userService} from '../../Services/user.service';
 import {userModel} from '../../models/userModel';
-import { getLoggedInUser } from '../../helpers/localStorageService';
+import { getLoggedInUser, getLoginType } from '../../helpers/localStorageService';
 import UserTable from '../../components/userTable';
+import SampleAppButtonLaunch from '../../components/SampleAppButtonLaunch';
+import { IAccountInfo } from 'react-aad-msal';
 interface HomepageState{
     users: userModel[] | null,
     canCreate: boolean;
@@ -10,7 +12,7 @@ interface HomepageState{
 
 class HomePage extends Component<any, HomepageState> {
 
-    
+    isAad: boolean;
     constructor(props: any) {
         super(props);
         this.logout = this.logout.bind(this);
@@ -20,7 +22,10 @@ class HomePage extends Component<any, HomepageState> {
             users: null,
             canCreate: false
         };
+        this.isAad = getLoginType();
     }
+
+    userInfoCallback = (userInfo:IAccountInfo) => {  }
 
     componentDidMount() {
         const loggedInUserRole = getLoggedInUser()?.role;
@@ -41,19 +46,28 @@ class HomePage extends Component<any, HomepageState> {
             <div className="container">
                 <div className="row justify-content-center align-items-center vh-100">
                     <div className="col-6">
-                        <h2>Users</h2>           
-                        <button onClick={this.logout}>Logout</button>
+                        <h2>Users</h2>
+                        {
+                            this.isAad
+                            ?
+                            <SampleAppButtonLaunch /> 
+                            :
+                            <button onClick={this.logout}>Logout</button>
+                        }                              
                         {
                             this.state?.users &&
                             <UserTable users={this.state.users}/>                        
+                        }
+                        {
+                            canCreate &&
+                            <button onClick={this.addNewUser}>Add new user</button>   
                         }  
-                        <button onClick={this.addNewUser}>Add new user</button>   
+                        
                     </div>
                 </div>
             </div>
         );
     }
-
 
     addNewUser = ()=>{
 

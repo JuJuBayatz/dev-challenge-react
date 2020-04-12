@@ -5,7 +5,8 @@ import {userModel} from '../models/userModel';
 
 export const userService = {
     login, 
-    logout,  
+    logout,
+    loginOpenId,  
     get,
     update,
     deleteUser,
@@ -13,6 +14,32 @@ export const userService = {
 };
 const apiUrl = 'http://localhost:8080/';
 
+function loginOpenId(email:string, jwtIdToken:string) {
+
+    const credentials = {
+        email: email,
+        jwtIdToken: jwtIdToken
+    };
+
+    const requestOptions: AxiosRequestConfig = {
+        url: apiUrl +'login/loginOpenId/',
+        method: 'POST',
+        data: credentials
+    };
+
+    return Axios(requestOptions)
+        .then(handleResponse)
+        .then((data) => {
+
+            console.log(data);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('aad', 'true');
+            window.location.reload();
+            return data;
+
+        });
+}
 function login(email:string, password:string) {
 
     const credentials = {
@@ -42,7 +69,8 @@ function login(email:string, password:string) {
 function logout() {
 
     localStorage.removeItem('user');
-    localStorage.removeItem('token');   
+    localStorage.removeItem('token');
+    localStorage.removeItem('aad');   
 }
 
 function get():any {
