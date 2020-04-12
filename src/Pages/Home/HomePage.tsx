@@ -4,7 +4,7 @@ import {userModel} from '../../models/userModel';
 import { getLoggedInUser, getLoginType } from '../../helpers/localStorageService';
 import UserTable from '../../components/userTable';
 import SampleAppButtonLaunch from '../../components/SampleAppButtonLaunch';
-import { IAccountInfo } from 'react-aad-msal';
+
 interface HomepageState{
     users: userModel[] | null,
     canCreate: boolean;
@@ -25,8 +25,6 @@ class HomePage extends Component<any, HomepageState> {
         this.isAad = getLoginType();
     }
 
-    userInfoCallback = (userInfo:IAccountInfo) => {  }
-
     componentDidMount() {
         const loggedInUserRole = getLoggedInUser()?.role;
         userService.get()
@@ -46,7 +44,7 @@ class HomePage extends Component<any, HomepageState> {
             <div className="container">
                 <div className="row justify-content-center align-items-center vh-100">
                     <div className="col-6">
-                        <h2>Users</h2>
+                        <h2>Users management</h2>
                         {
                             this.isAad
                             ?

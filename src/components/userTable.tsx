@@ -13,13 +13,16 @@ class UserTable extends Component<any, {users?:any}> {
         return <div className="row justify-content-center align-items-center vh-100">
              <table>
                 <thead>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    
                 </thead>
                 <tbody>
                 {
                     this.state.users.map((user:any, i:number) => {
-                        return (<TableRow user={user} role={'admin'} ></TableRow>);
+                        return (<TableRow user={user} role={'admin'} key={i}></TableRow>);
                     })
                 }               
                 </tbody>

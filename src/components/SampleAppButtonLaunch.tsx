@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { AzureAD, LoginType,MsalAuthProvider } from 'react-aad-msal';
+import { AzureAD } from 'react-aad-msal';
 import { userService } from '../Services/user.service';
+import {authProvider} from '../config/config'
 
 class SampleAppButtonLaunch extends React.Component<any, any> {
     unauthenticatedFunction = (loginFunction:any) => {
@@ -37,22 +38,10 @@ class SampleAppButtonLaunch extends React.Component<any, any> {
     }
 
     render() {
+        
         return (
             <AzureAD
-                provider={new MsalAuthProvider({
-                    auth:{
-                        clientId: 'd9ca585f-7e82-481d-bace-a4f141d7fd90',
-                        authority:'https://login.microsoftonline.com/common' ,
-                        postLogoutRedirectUri:'http://localhost:3000/'
-                    }
-                },
-                {
-                    scopes: ["openid", "offline_access", "https://graph.microsoft.com/mail.read"]
-                },
-                {
-                    loginType:LoginType.Popup
-                }
-                                 )}
+                provider={authProvider}
                 unauthenticatedFunction={this.unauthenticatedFunction}
                 authenticatedFunction={this.authenticatedFunction}
                 accountInfoCallback={this.userJustLoggedIn} 
